@@ -1,0 +1,146 @@
+# labuladong-python3
+
+### 括号匹配问题 栈的使用
+```
+def check(exp):
+    stack = []
+    for char in exp:
+        if char in ['(', '[', '{']:
+            # 压入栈
+            stack.append(char)
+        elif char == ')':
+            if stack and stack[-1] == '(':
+                stack.pop()
+            else:
+                return False
+        elif char == ']':
+            if stack and stack[-1] == '[':
+                stack.pop()
+            else:
+                return False
+        elif char == '}':
+            if stack and stack[-1] == '{':
+                stack.pop()
+            else:
+                return False
+    # 如果栈为空 说明括号全部匹配
+    if not stack:
+        return True
+    return False
+
+print(check("[(])"))
+
+```
+
+### 迷宫问题  栈的应用
+```
+maze = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 1, 1, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
+        [1, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+
+# 对于maze中的元素，可以用maze[x][y]取值，x是行坐标，y就是列坐标
+# 约定按四个方向探寻：
+dirs = [lambda x, y: (x - 1, y),  # 上
+        lambda x, y: (x + 1, y),  # 下
+        lambda x, y: (x, y - 1),  # 左
+        lambda x, y: (x, y + 1)]  # 右
+
+
+
+def maze_path(x1, y1, x2, y2):
+    """
+    :param x1: 起点 行坐标
+    :param y1: 起点 列坐标
+    :param x2: 终点 行坐标
+    :param y2: 终点 列坐标
+    :return: 
+    """
+    stack = []
+    stack.append((x1, y1))  # 起点位置入栈
+    while stack:  # 栈不为空时循环；栈空代表死迷宫（找遍所有的路，直到回退到起点位置，继续回退(出栈)，栈空）
+        curNode = stack[-1]  # 栈顶，表示当前位置
+        if curNode[0] == x2 and curNode[1] == y2:  # 到达终点,栈中的元素就是最终路径
+            for node in stack:  # 打印路径
+                print(node)
+            return True
+        for dir in dirs:  # 依次进行4个方向的探寻
+            nextNode = dir(*curNode)  # 下一个位置坐标
+            if maze[nextNode[0]][nextNode[1]] == 0:  # 0代表通道，说明找到下一个方块
+                stack.append(nextNode)  # 添加到栈顶，更新当前位置
+                maze[nextNode[0]][nextNode[1]] = -1  # 将0赋值为-1，标记为已经走过，防止死循环
+                break  # 找到一个通道，退出
+        else:  # 四个方向都找完，没有通道，那么开始回退
+            maze[curNode[0]][curNode[1]] = -1  # 标记死路
+            stack.pop()  # 弹出栈顶，回退
+    print('死迷宫')
+    return False  # 死迷宫
+
+# 获得的结果还是有问题的 路径冗余
+maze_path(1, 1, 8, 8)
+```
+
+### 迷宫问题 队列的应用
+```
+maze = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 1, 1, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
+        [1, 1, 0, 0, 0, 0, 0, 1, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+        
+# 对于maze中的元素，可以用maze[x][y]取值，x是行坐标，y就是列坐标
+# 约定按四个方向探寻：
+dirs = [lambda x, y: (x - 1, y),  # 上
+        lambda x, y: (x + 1, y),  # 下
+        lambda x, y: (x, y - 1),  # 左
+        lambda x, y: (x, y + 1)]  # 右        
+
+from collections import deque
+
+
+def maze_path2(x1, y1, x2, y2):
+    queue = deque()
+    path = []  # 存放走过的
+    queue.append((x1, y1, -1))
+    # queue中元素：(1, 1, -1)，前两位是坐标，第三位是其上一步在path中的索引。这里用-1标记起点。
+    maze[x1][y1] = -1
+    while queue:
+        curNode = queue.popleft()
+        path.append(curNode)
+        if curNode[0] == x2 and curNode[1] == y2:
+            print_path(path)
+            return True
+        for dir in dirs:
+            nextNode = dir(curNode[0], curNode[1])
+            if maze[nextNode[0]][nextNode[1]] == 0:
+                queue.append((*nextNode, len(path) - 1))  # len(path)-1) 记录来源索引
+                maze[nextNode[0]][nextNode[1]] = -1
+    return False
+
+
+def print_path(path):
+    '''提取路径'''
+    curNode = path[-1]
+    realpath = []
+    print('迷宫路径为：')
+    while curNode[2] != -1:
+        realpath.append(curNode[0:2])
+        curNode = path[curNode[2]] # 通过索引找到上一步节点
+    realpath.append(curNode[0:2]) # 加入起点
+    realpath.reverse()
+    print(realpath)
+
+
+maze_path2(1, 1, 8, 8)
+```
