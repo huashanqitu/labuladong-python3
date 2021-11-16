@@ -1,7 +1,12 @@
 # labuladong-python3
 
 ### 773. 滑动谜题
+
+
 ```
+# 这里获取上下左右是直接枚举的  
+# 更通用的办法是  dirs = [[-1,0],[1,0],[0,-1],[0,1]]
+
 from queue import Queue
 
 class Solution:
