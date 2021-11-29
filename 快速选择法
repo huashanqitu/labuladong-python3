@@ -1,0 +1,95 @@
+### 215. 数组中的第K个最大元素
+
+堆排序算法
+
+```
+import queue
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        # 小顶堆 堆顶是最小元素
+        pq = queue.PriorityQueue()
+        for e in nums:
+            # 每个元素都要过一遍二叉堆
+            pq.put(e)
+            # 堆中元素多于k个时 删除堆顶元素
+            if pq.qsize() > k:
+                pq.get()
+        # pq中剩下的是nums中k个最大元素
+        # 堆顶是最小的那个 即第k个最大元素
+        return pq.get()
+```
+
+快速选择算法
+
+```
+import random
+
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        # 这里是一处优化 随机打乱数组
+
+        self.shuffle(nums)
+        print(nums)
+        # 其他都不变
+        lo = 0
+        hi = len(nums)-1
+        # 根据题意 求第k大 排出来的是一个正序数组  所以做一下索引转化
+        k = len(nums) - k
+        while lo <= hi:
+            # 在nums[lo...hi]中选一个分界点
+            print(nums)
+            p = self.partition(nums, lo, hi)
+            if p < k:
+                # 第k大的元素在nums[p+1..hi]中
+                lo = p + 1
+            elif p > k:
+                # 第k大的元素在nums[lo..p-1]中
+                hi = p - 1
+            else:
+                # 找到第k大的元素
+                return nums[p]
+        return -1
+
+    def partition(self, nums, lo, hi):
+        if lo == hi:
+            return lo
+        # 将nums[lo]作为默认分界点pivot
+        pivot = nums[lo]
+        # j = hi + 1 因为while中会先执行-1
+        i = lo
+        j = hi + 1
+        while True:
+            # 保证nums[lo..i]都小于pivot
+            i += 1
+            while nums[i] < pivot:
+                if i == hi:
+                    break
+                else:
+                    i += 1
+            # 保证nums[j..hi]都大于pivot
+            j -= 1
+            while nums[j] > pivot:
+                if j == lo:
+                    break
+                else:
+                    j -= 1
+            if i >= j:
+                break
+            # 如果走到这里 一定有
+            # nums[i] > pivot && nums[j] < pivot
+            # 所以需要交换nums[i]和nums[j]
+            # 保证nums[lo..i] < pivot < nums[j..hi]
+            nums[i],nums[j] = nums[j],nums[i]
+        # 将pivot值交换到正确的位置
+        nums[j],nums[lo] = nums[lo],nums[j]
+        # 现在nums[lo..j-1]<nums[j]<nums[j+1..hi]
+        return j
+
+    # 为了尽可能防止极端情况发生，我们需要在算法开始的时候对nums数组来一次随机打乱
+    def shuffle(self,nums):
+        n = len(nums)
+        for i in range(n):
+            # 从i到最后随机选一个元素
+            r = i + random.randint(0,n-i-1)
+            nums[r],nums[i] = nums[i],nums[r]
+```         
