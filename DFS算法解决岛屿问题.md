@@ -196,3 +196,39 @@ class Solution:
         return res
 ```
 
+### 694. 不同岛屿的数量 此题是leetcode的会员题目 有待验证
+```
+class Solution:
+    def numDistinctIslands(self, grid: List[List[int]]) -> int:
+        m = len(grid)
+        n = len(grid[0])
+
+        def dfs(grid, i, j, sb, direction):
+            if i < 0 or j < 0 or i >= m or j >= n:
+                return
+            # 前序遍历位置 进入（i,j）
+            grid[i][j] = 0
+            sb.append(direction)
+
+            # 上下左右
+            dfs(grid, i - 1, j, sb, 1)
+            dfs(grid, i + 1, j, sb, 2)
+            dfs(grid, i, j - 1, sb, 3)
+            dfs(grid, i, j + 1, sb, 4)
+
+            # 后序遍历位置 离开（i,j）
+            sb.append(-direction)            
+        
+        # 记录所有岛屿的序列化结果
+        islands = set()
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == 1:
+                    # 淹没这个岛屿， 同时存储岛屿的序列化结果
+                    sb = []
+                    # 初始方向可以随便写，不影响正确性
+                    dfs(grid, i, j, sb, 666)
+                    islands.add(','.join([str(k) for k in sb]))
+        # 不同岛屿的数量
+        return len(islands)
+```                        
