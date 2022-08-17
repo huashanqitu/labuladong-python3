@@ -1,6 +1,7 @@
 # labuladong-python3
 
 ### 括号匹配问题 栈的使用
+
 ```
 def check(exp):
     stack = []
