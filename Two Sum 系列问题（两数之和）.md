@@ -18,7 +18,7 @@ class Solution:
         return [-1,-1]
 ```
 
-### 如果数组是有序的 可以用双指针的方法
+### 167 如果数组是有序的 可以用双指针的方法
 ```
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
