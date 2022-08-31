@@ -1,6 +1,6 @@
 # labuladong-python3
 
-### 实现 strStr()
+### 28 实现 strStr()
 ```
 class Solution:
     def strStr(self, haystack: str, needle: str) -> int:
