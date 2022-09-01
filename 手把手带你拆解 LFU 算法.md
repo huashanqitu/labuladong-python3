@@ -1,6 +1,6 @@
 # labuladong-python3
 
-### LFU缓存
+### 460 LFU缓存
 ```
 class LFUCache:
 
