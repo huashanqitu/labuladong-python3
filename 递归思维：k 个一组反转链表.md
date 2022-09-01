@@ -33,7 +33,7 @@ def reverse(a, b):
 ```    
 
 
-### K 个一组反转链表
+### 25 K 个一组反转链表
 
 ```
 # Definition for singly-linked list.
