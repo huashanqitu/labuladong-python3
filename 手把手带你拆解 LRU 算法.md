@@ -1,6 +1,6 @@
 # labuladong-python3
 
-### LRU 缓存机制
+### 146 LRU 缓存机制
 ```
 class Node:
     def __init__(self, key, val, next=None, prev=None):
