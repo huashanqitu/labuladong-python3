@@ -1,6 +1,6 @@
 # labuladong-python3
 
-### 设计推特
+### 355 设计推特
 ```
 import time
 
