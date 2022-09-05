@@ -355,7 +355,6 @@ class State:
         self.y = y
         # 从起点 (0, 0) 到当前位置的最小体力消耗（距离）
         self.effortFromStart = effortFromStart
-
     def __lt__(self, other):
         return self.effortFromStart < other.effortFromStart
 
