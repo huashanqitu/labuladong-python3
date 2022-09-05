@@ -145,7 +145,7 @@ class State:
         self.ID = ID
         self.distFromStart = distFromStart
 
-   def __lt__(self, other):
+    def __lt__(self, other):
         return self.distFromStart < other.distFromStart
 
 # 返回节点 from 到节点 to 之间的边的权重
